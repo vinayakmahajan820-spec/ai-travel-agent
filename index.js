@@ -1,365 +1,90 @@
-// ==========================================
-// AI TRAVEL DISRUPTION & REPLANNING AGENT
-// ==========================================
+async function simulateDisruption() {
+    const disruption = {
+        flight_number: "AI-204",
+        delay_hours: 4,
+        original_arrival: "02:00 PM",
+        new_arrival: "06:00 PM"
+    };
 
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/simulate-disruption",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(disruption)
+            }
+        );
 
-// Main function called when the user clicks
-// "Simulate Flight Delay"
-function simulateDisruption() {
+        const data = await response.json();
 
-    // ------------------------------------------
-    // STEP 1: Update flight status
-    // ------------------------------------------
+        console.log("Backend response:", data);
 
-    const flightStatus = document.getElementById("flightStatus");
-    const systemStatus = document.getElementById("systemStatus");
+        // Update flight status
+        document.getElementById("flightStatus").textContent = "Delayed 4 Hours";
 
-    flightStatus.innerText = "Delayed by 4 Hours";
-    flightStatus.style.color = "#dc2626";
+        // Update system status
+        document.getElementById("systemStatus").textContent = "Journey Replanned";
 
-    systemStatus.innerText = "⚠️ Disruption Detected";
-    systemStatus.style.color = "#dc2626";
-
-
-    // ------------------------------------------
-    // STEP 2: Show disruption information
-    // ------------------------------------------
-
-    const disruptionSection =
-        document.querySelector(".disruption-card");
-
-    disruptionSection.innerHTML = `
-        <div>
-            <h3>⚠️ Flight Delay Detected</h3>
-
+        // Show replanning status
+        document.getElementById("replanningStatus").innerHTML = `
+            <h3>✅ Replanning Completed</h3>
             <p>
-                Flight <strong>AI-204</strong> is delayed by
-                <strong>4 hours</strong>.
+                The AI analyzed the disruption and updated
+                the dependent travel events.
             </p>
+        `;
 
+        // Show updated travel plan
+        document.getElementById("updatedPlan").innerHTML = `
+            <div>
+                <h3>✈️ Flight</h3>
+                <p>${data.agents.replanning_agent.updated_plan.flight.flight_number}</p>
+                <p>Arrival: ${data.agents.replanning_agent.updated_plan.flight.arrival}</p>
+                <p>Status: Delayed</p>
+            </div>
+
+            <div>
+                <h3>🏨 Hotel</h3>
+                <p>
+                    Check-in:
+                    ${data.agents.replanning_agent.updated_plan.hotel.new_time}
+                </p>
+                <p>Status: Rescheduled</p>
+            </div>
+
+            <div>
+                <h3>💼 Business Meeting</h3>
+                <p>
+                    ${data.agents.replanning_agent.updated_plan.meeting.time}
+                </p>
+                <p>Status: Rescheduled</p>
+            </div>
+
+            <div>
+                <h3>🗼 Eiffel Tower Visit</h3>
+                <p>
+                    ${data.agents.replanning_agent.updated_plan.activity.time}
+                </p>
+                <p>Status: Rescheduled</p>
+            </div>
+        `;
+
+        // Show traveler notification
+        document.getElementById("notification").innerHTML = `
+            <h3>📢 Traveler Notification</h3>
             <p>
-                Original arrival:
-                <strong>02:00 PM</strong>
+                ${data.agents.communication_agent.notification}
             </p>
+        `;
 
-            <p>
-                New arrival:
-                <strong>06:00 PM</strong>
-            </p>
-        </div>
+        alert("AI successfully replanned your journey!");
 
-        <div class="alert-icon">
-            🚨
-        </div>
-    `;
+    } catch (error) {
+        console.error("Error:", error);
 
-
-    // ------------------------------------------
-    // STEP 3: Dependency Agent
-    // ------------------------------------------
-
-    const dependencyNodes =
-        document.querySelectorAll(".dependency-node");
-
-    dependencyNodes.forEach(function(node) {
-
-        node.style.border = "2px solid #dc2626";
-
-    });
-
-
-    // ------------------------------------------
-    // STEP 4: Show AI processing
-    // ------------------------------------------
-
-    const replanningStatus =
-        document.getElementById("replanningStatus");
-
-    replanningStatus.innerHTML = `
-        <h3>🤖 AI Agent is Analyzing...</h3>
-
-        <p>
-            Flight Agent detected a delay.
-        </p>
-
-        <p>
-            Dependency Agent is checking affected events...
-        </p>
-
-        <p>
-            Schedule Agent is checking time conflicts...
-        </p>
-
-        <p>
-            Replanning Agent is creating a new itinerary...
-        </p>
-    `;
-
-    replanningStatus.style.border =
-        "2px solid #2563eb";
-
-
-    // ------------------------------------------
-    // STEP 5: Simulate AI processing time
-    // ------------------------------------------
-
-    setTimeout(function() {
-
-        generateNewPlan();
-
-    }, 2500);
-}
-
-
-
-// ==========================================
-// GENERATE UPDATED TRAVEL PLAN
-// ==========================================
-
-function generateNewPlan() {
-
-    const replanningStatus =
-        document.getElementById("replanningStatus");
-
-    const updatedPlan =
-        document.getElementById("updatedPlan");
-
-    const notification =
-        document.getElementById("notification");
-
-
-    // ------------------------------------------
-    // REPLANNING COMPLETE
-    // ------------------------------------------
-
-    replanningStatus.innerHTML = `
-        <h3>✅ Replanning Complete</h3>
-
-        <p>
-            The AI analyzed the dependency chain and
-            generated a new travel plan.
-        </p>
-
-        <p>
-            <strong>3 dependent events were affected.</strong>
-        </p>
-    `;
-
-    replanningStatus.style.border =
-        "2px solid #16a34a";
-
-
-    // ------------------------------------------
-    // UPDATED ITINERARY
-    // ------------------------------------------
-
-    updatedPlan.innerHTML = `
-
-        <div class="timeline">
-
-            <div class="timeline-item">
-
-                <div class="timeline-icon">
-                    ✈️
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        Flight AI-204
-                    </h3>
-
-                    <p>
-                        Mumbai → Paris
-                    </p>
-
-                    <p>
-                        New arrival:
-                        <strong>06:00 PM</strong>
-                    </p>
-
-                    <span class="status"
-                          style="
-                          background:#fee2e2;
-                          color:#991b1b;
-                          ">
-                        Delayed
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="timeline-item">
-
-                <div class="timeline-icon">
-                    🏨
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        Hotel Check-in Rescheduled
-                    </h3>
-
-                    <p>
-                        Original: 04:00 PM
-                    </p>
-
-                    <p>
-                        New check-in:
-                        <strong>07:00 PM</strong>
-                    </p>
-
-                    <span class="status"
-                          style="
-                          background:#dcfce7;
-                          color:#166534;
-                          ">
-                        Automatically Updated
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="timeline-item">
-
-                <div class="timeline-icon">
-                    💼
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        Business Meeting
-                    </h3>
-
-                    <p>
-                        Original: 10:00 AM
-                    </p>
-
-                    <p>
-                        New meeting time:
-                        <strong>02:00 PM - Next Day</strong>
-                    </p>
-
-                    <span class="status"
-                          style="
-                          background:#dcfce7;
-                          color:#166534;
-                          ">
-                        Rescheduled
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <div class="timeline-item">
-
-                <div class="timeline-icon">
-                    🗼
-                </div>
-
-                <div class="timeline-content">
-
-                    <h3>
-                        Eiffel Tower Visit
-                    </h3>
-
-                    <p>
-                        Original: 05:00 PM
-                    </p>
-
-                    <p>
-                        New time:
-                        <strong>06:00 PM - Next Day</strong>
-                    </p>
-
-                    <span class="status"
-                          style="
-                          background:#dcfce7;
-                          color:#166534;
-                          ">
-                        Rescheduled
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-    `;
-
-
-    // ------------------------------------------
-    // COMMUNICATION AGENT
-    // ------------------------------------------
-
-    notification.innerHTML = `
-
-        <h3>📢 Traveler Notification</h3>
-
-        <p>
-            <strong>Your itinerary has been automatically updated.</strong>
-        </p>
-
-        <br>
-
-        <p>
-            ✈️ Your flight AI-204 is delayed by 4 hours.
-        </p>
-
-        <p>
-            🏨 Hotel check-in has been moved to 07:00 PM.
-        </p>
-
-        <p>
-            💼 Your business meeting has been rescheduled.
-        </p>
-
-        <p>
-            🗼 Your Eiffel Tower activity has been moved
-            to the next day.
-        </p>
-
-        <br>
-
-        <p>
-            🤖 The AI Travel Agent identified the dependency
-            chain and automatically replanned your journey.
-        </p>
-
-    `;
-
-    notification.style.borderLeft =
-        "5px solid #16a34a";
-
-
-    // ------------------------------------------
-    // UPDATE SYSTEM STATUS
-    // ------------------------------------------
-
-    const systemStatus =
-        document.getElementById("systemStatus");
-
-    systemStatus.innerText =
-        "✅ Journey Replanned";
-
-    systemStatus.style.color =
-        "#16a34a";
-
-
-    // ------------------------------------------
-    // Scroll to updated plan
-    // ------------------------------------------
-
-    updatedPlan.scrollIntoView({
-        behavior: "smooth"
-    });
-
+        alert("Could not connect to backend.");
+    }
 }

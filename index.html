@@ -5,326 +5,396 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>AI Travel Disruption Agent</title>
+    <title>AI Autonomous Travel Agent</title>
 
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
+    <!-- HEADER -->
 
     <header>
-        <nav class="navbar">
 
-            <div class="logo">
-                ✈️ AI Travel Agent
-            </div>
+        <div class="logo">
+            🤖 AI Travel Agent
+        </div>
 
-            <div class="nav-links">
-                <a href="#dashboard">Dashboard</a>
-                <a href="#itinerary">Itinerary</a>
-                <a href="#dependencies">Dependencies</a>
-                <a href="#replanning">Replanning</a>
-            </div>
+        <div class="online">
+            ● AI SYSTEM ONLINE
+        </div>
 
-        </nav>
     </header>
 
 
-    <!-- ================= HERO ================= -->
+    <!-- HERO -->
 
     <section class="hero">
 
         <div class="hero-content">
 
-            <p class="badge">
-                🤖 Autonomous Travel Management
-            </p>
+            <div class="badge">
+                AUTONOMOUS TRAVEL INTELLIGENCE
+            </div>
 
             <h1>
-                When One Change Breaks
-                <span>Your Journey</span>
+                When your journey changes,
+                <span>AI fixes the journey.</span>
             </h1>
 
             <p>
-                Our Agentic AI detects travel disruptions,
-                understands dependency chains, and automatically
-                creates an updated travel plan.
+                Our autonomous travel agent detects disruptions,
+                understands dependency chains and creates a new
+                journey automatically.
             </p>
-
-            <button onclick="simulateDisruption()">
-                Simulate Flight Delay
-            </button>
 
         </div>
 
     </section>
 
 
-    <!-- ================= DASHBOARD ================= -->
+    <main>
 
-    <main id="dashboard">
 
-        <section class="dashboard">
+        <!-- TRIP INFORMATION -->
 
-            <h2>Travel Dashboard</h2>
+        <section class="panel">
 
-            <div class="dashboard-grid">
+            <h2>✈️ Your Journey</h2>
 
-                <div class="dashboard-card">
-                    <h3>📍 Destination</h3>
-                    <p>Paris, France</p>
-                </div>
+            <p class="section-description">
+                Enter your travel information.
+            </p>
 
-                <div class="dashboard-card">
-                    <h3>📅 Trip Duration</h3>
-                    <p>12 June - 18 June</p>
-                </div>
+            <div class="form-grid">
 
-                <div class="dashboard-card">
-                    <h3>✈️ Flight Status</h3>
-                    <p id="flightStatus">On Time</p>
-                </div>
+                <label>
+                    Flight Number
 
-                <div class="dashboard-card">
-                    <h3>⚡ System Status</h3>
-                    <p id="systemStatus">Monitoring</p>
-                </div>
+                    <input
+                        id="flightNumber"
+                        type="text"
+                        value="AI-204"
+                    >
+
+                </label>
+
+
+                <label>
+                    Destination
+
+                    <input
+                        id="destination"
+                        type="text"
+                        value="Paris"
+                    >
+
+                </label>
+
+
+                <label>
+                    Flight Arrival
+
+                    <input
+                        id="arrival"
+                        type="text"
+                        value="02:00 PM"
+                    >
+
+                </label>
+
+
+                <label>
+                    Hotel
+
+                    <input
+                        id="hotel"
+                        type="text"
+                        value="Grand Paris Hotel"
+                    >
+
+                </label>
+
+
+                <label>
+                    Meeting Time
+
+                    <input
+                        id="meeting"
+                        type="text"
+                        value="04:00 PM"
+                    >
+
+                </label>
+
+
+                <label>
+                    Activity
+
+                    <input
+                        id="activity"
+                        type="text"
+                        value="Eiffel Tower - 07:00 PM"
+                    >
+
+                </label>
 
             </div>
 
         </section>
 
 
-        <!-- ================= ITINERARY ================= -->
 
-        <section id="itinerary" class="section">
+        <!-- DISRUPTION -->
 
-            <h2>🗓️ Current Itinerary</h2>
+        <section class="panel disruption-panel">
+
+            <h2>⚠️ Report Travel Disruption</h2>
 
             <p class="section-description">
-                The AI maintains a multi-step journey containing
-                flights, hotels, meetings and activities.
+
+                Tell the AI what changed.
+                The system will analyze the entire journey.
+
             </p>
 
 
-            <div class="timeline">
+            <div class="form-grid">
 
-                <!-- Flight -->
 
-                <div class="timeline-item">
+                <label>
+                    Disruption Type
 
-                    <div class="timeline-icon">
+                    <select id="disruptionType">
+
+                        <option>
+                            Flight Delay
+                        </option>
+
+                        <option>
+                            Flight Cancellation
+                        </option>
+
+                        <option>
+                            Flight Reschedule
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+
+                <label>
+                    Delay
+
+                    <select id="delay">
+
+                        <option value="1">
+                            1 Hour
+                        </option>
+
+                        <option value="2">
+                            2 Hours
+                        </option>
+
+                        <option value="4" selected>
+                            4 Hours
+                        </option>
+
+                        <option value="6">
+                            6 Hours
+                        </option>
+
+                        <option value="8">
+                            8 Hours
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+
+                <label>
+                    Maximum Budget (₹)
+
+                    <input
+                        id="budget"
+                        type="number"
+                        value="10000"
+                    >
+
+                </label>
+
+
+            </div>
+
+
+            <button
+                onclick="analyzeDisruption()"
+                class="primary-button"
+            >
+
+                🤖 Analyze & Replan Journey
+
+            </button>
+
+        </section>
+
+
+
+        <!-- AI AGENTS -->
+
+        <section class="panel">
+
+            <h2>🧠 Autonomous AI Agents</h2>
+
+            <p class="section-description">
+
+                Multiple specialized agents work together
+                to solve the disruption.
+
+            </p>
+
+
+            <div class="agents">
+
+
+                <div id="agent1" class="agent">
+
+                    <div>
                         ✈️
                     </div>
 
-                    <div class="timeline-content">
+                    <strong>
+                        Flight Agent
+                    </strong>
 
-                        <h3>Flight: Mumbai → Paris</h3>
-
-                        <p>
-                            12 June | 08:00 AM - 02:00 PM
-                        </p>
-
-                        <span class="status normal">
-                            Scheduled
-                        </span>
-
-                    </div>
+                    <span>
+                        Waiting
+                    </span>
 
                 </div>
 
 
-                <!-- Hotel -->
 
-                <div class="timeline-item">
+                <div id="agent2" class="agent">
 
-                    <div class="timeline-icon">
+                    <div>
+                        🔗
+                    </div>
+
+                    <strong>
+                        Dependency Agent
+                    </strong>
+
+                    <span>
+                        Waiting
+                    </span>
+
+                </div>
+
+
+
+                <div id="agent3" class="agent">
+
+                    <div>
                         🏨
                     </div>
 
-                    <div class="timeline-content">
+                    <strong>
+                        Hotel Agent
+                    </strong>
 
-                        <h3>Hotel Check-in</h3>
-
-                        <p>
-                            12 June | 04:00 PM
-                        </p>
-
-                        <span class="status normal">
-                            Confirmed
-                        </span>
-
-                    </div>
+                    <span>
+                        Waiting
+                    </span>
 
                 </div>
 
 
-                <!-- Meeting -->
 
-                <div class="timeline-item">
+                <div id="agent4" class="agent">
 
-                    <div class="timeline-icon">
-                        💼
+                    <div>
+                        📅
                     </div>
 
-                    <div class="timeline-content">
+                    <strong>
+                        Schedule Agent
+                    </strong>
 
-                        <h3>Business Meeting</h3>
-
-                        <p>
-                            13 June | 10:00 AM
-                        </p>
-
-                        <span class="status normal">
-                            Confirmed
-                        </span>
-
-                    </div>
+                    <span>
+                        Waiting
+                    </span>
 
                 </div>
 
 
-                <!-- Activity -->
 
-                <div class="timeline-item">
+                <div id="agent5" class="agent">
 
-                    <div class="timeline-icon">
-                        🗼
+                    <div>
+                        🤖
                     </div>
 
-                    <div class="timeline-content">
+                    <strong>
+                        Replanning Agent
+                    </strong>
 
-                        <h3>Eiffel Tower Visit</h3>
-
-                        <p>
-                            13 June | 05:00 PM
-                        </p>
-
-                        <span class="status normal">
-                            Confirmed
-                        </span>
-
-                    </div>
+                    <span>
+                        Waiting
+                    </span>
 
                 </div>
+
+
+
+                <div id="agent6" class="agent">
+
+                    <div>
+                        📢
+                    </div>
+
+                    <strong>
+                        Communication Agent
+                    </strong>
+
+                    <span>
+                        Waiting
+                    </span>
+
+                </div>
+
 
             </div>
 
         </section>
 
 
-        <!-- ================= DISRUPTION ================= -->
 
-        <section class="section disruption-section">
+        <!-- DEPENDENCY -->
 
-            <h2>🚨 Travel Disruption</h2>
+        <section class="panel">
 
-            <div class="disruption-card">
-
-                <div>
-
-                    <h3>Flight Delay Detected</h3>
-
-                    <p>
-                        Flight AI-204 is delayed by
-                        <strong>4 hours</strong>.
-                    </p>
-
-                    <p>
-                        New arrival time:
-                        <strong>06:00 PM</strong>
-                    </p>
-
-                </div>
-
-                <div class="alert-icon">
-                    ⚠️
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= DEPENDENCY ANALYSIS ================= -->
-
-        <section id="dependencies" class="section">
-
-            <h2>🔗 Dependency Analysis</h2>
+            <h2>
+                🔗 Dependency Analysis
+            </h2>
 
             <p class="section-description">
-                The Dependency Agent identifies events that depend
-                on the disrupted flight.
+
+                The AI explains which events are affected
+                and why.
+
             </p>
 
 
-            <div class="dependency-chain">
+            <div id="dependency">
 
-                <div class="dependency-node affected">
+                <div class="empty-state">
 
-                    <span>✈️</span>
-
-                    <h3>Flight Delay</h3>
-
-                    <p>
-                        +4 hours
-                    </p>
-
-                </div>
-
-
-                <div class="arrow">
-                    ↓
-                </div>
-
-
-                <div class="dependency-node affected">
-
-                    <span>🏨</span>
-
-                    <h3>Hotel Check-in</h3>
-
-                    <p>
-                        Arrival after check-in
-                    </p>
-
-                </div>
-
-
-                <div class="arrow">
-                    ↓
-                </div>
-
-
-                <div class="dependency-node affected">
-
-                    <span>💼</span>
-
-                    <h3>Business Meeting</h3>
-
-                    <p>
-                        Travel time conflict
-                    </p>
-
-                </div>
-
-
-                <div class="arrow">
-                    ↓
-                </div>
-
-
-                <div class="dependency-node affected">
-
-                    <span>🗼</span>
-
-                    <h3>Activity</h3>
-
-                    <p>
-                        Schedule conflict
-                    </p>
+                    Waiting for disruption analysis...
 
                 </div>
 
@@ -333,54 +403,28 @@
         </section>
 
 
-        <!-- ================= AGENT PIPELINE ================= -->
 
-        <section class="section">
+        <!-- UPDATED PLAN -->
 
-            <h2>🤖 Agent Processing</h2>
+        <section class="panel">
 
-            <div class="agent-grid">
+            <h2>
+                🗺️ Autonomous Replanned Journey
+            </h2>
 
-                <div class="agent-card">
-                    <span>1</span>
-                    <h3>Itinerary Agent</h3>
-                    <p>Reads the complete journey.</p>
-                </div>
+            <p class="section-description">
 
-                <div class="agent-card">
-                    <span>2</span>
-                    <h3>Flight Agent</h3>
-                    <p>Detects flight disruption.</p>
-                </div>
+                The AI-generated alternatives will appear here.
 
-                <div class="agent-card">
-                    <span>3</span>
-                    <h3>Dependency Agent</h3>
-                    <p>Finds affected events.</p>
-                </div>
+            </p>
 
-                <div class="agent-card">
-                    <span>4</span>
-                    <h3>Hotel Agent</h3>
-                    <p>Checks hotel changes.</p>
-                </div>
 
-                <div class="agent-card">
-                    <span>5</span>
-                    <h3>Schedule Agent</h3>
-                    <p>Checks time conflicts.</p>
-                </div>
+            <div id="plan">
 
-                <div class="agent-card">
-                    <span>6</span>
-                    <h3>Replanning Agent</h3>
-                    <p>Creates a new plan.</p>
-                </div>
+                <div class="empty-state">
 
-                <div class="agent-card">
-                    <span>7</span>
-                    <h3>Communication Agent</h3>
-                    <p>Notifies the traveler.</p>
+                    No revised itinerary yet.
+
                 </div>
 
             </div>
@@ -388,80 +432,74 @@
         </section>
 
 
-        <!-- ================= REPLANNING ================= -->
 
-        <section id="replanning" class="section">
+        <!-- CUSTOMER COMMUNICATION -->
 
-            <h2>🔄 Autonomous Replanning</h2>
+        <section class="panel communication">
 
-            <div id="replanningStatus" class="replanning-card">
+            <h2>
+                📢 AI Traveler Assistant
+            </h2>
 
-                <h3>Waiting for disruption...</h3>
 
-                <p>
-                    The AI will automatically analyze the
-                    dependency chain when a disruption occurs.
-                </p>
+            <div id="message">
+
+                <div class="empty-state">
+
+                    No disruption detected.
+
+                </div>
+
+            </div>
+
+
+            <div class="button-group">
+
+                <button
+                    onclick="acceptPlan()"
+                    class="primary-button"
+                >
+
+                    ✅ Accept New Plan
+
+                </button>
+
+
+                <button
+                    onclick="resetJourney()"
+                    class="secondary-button"
+                >
+
+                    🔄 Reset Journey
+
+                </button>
 
             </div>
 
         </section>
 
-
-        <!-- ================= UPDATED PLAN ================= -->
-
-        <section class="section">
-
-            <h2>✨ Updated Travel Plan</h2>
-
-            <div id="updatedPlan" class="updated-plan">
-
-                <p>
-                    No updated plan generated yet.
-                </p>
-
-            </div>
-
-        </section>
-
-
-        <!-- ================= COMMUNICATION ================= -->
-
-        <section class="section">
-
-            <h2>📢 Communication</h2>
-
-            <div id="notification" class="notification">
-
-                <h3>Traveler Notification</h3>
-
-                <p>
-                    No new notifications.
-                </p>
-
-            </div>
-
-        </section>
 
     </main>
 
 
-    <!-- ================= FOOTER ================= -->
+
+    <!-- FOOTER -->
 
     <footer>
 
-        <p>
-            ✈️ AI Travel Disruption & Autonomous Replanning Agent
-        </p>
+        <strong>
+            🤖 AI Autonomous Travel Agent
+        </strong>
 
         <p>
-            Agentic AI Travel Management System
+            Dependency-aware travel disruption & autonomous replanning
         </p>
 
     </footer>
 
 
-    <!-- JavaScript -->
+
+    <!-- JAVASCRIPT -->
 
     <script src="index.js"></script>
 

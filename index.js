@@ -1,12 +1,17 @@
-async function simulateDisruption() {
-    const disruption = {
-        flight_number: "AI-204",
-        delay_hours: 4,
-        original_arrival: "02:00 PM",
-        new_arrival: "06:00 PM"
-    };
+async function analyzeDisruption() {
+
+    const flight = document.getElementById("flightNumber").value;
+    const type = document.getElementById("disruptionType").value;
+    const delay = Number(document.getElementById("delay").value);
+    const budget = Number(document.getElementById("budget").value);
+
+    const button = event.target;
+
+    button.innerText = "🤖 AI Finding Solutions...";
+    button.disabled = true;
 
     try {
+
         const response = await fetch(
             "http://127.0.0.1:8000/simulate-disruption",
             {
@@ -14,77 +19,170 @@ async function simulateDisruption() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify(disruption)
+
+                body: JSON.stringify({
+                    flight_number: flight,
+                    disruption_type: type,
+                    delay_hours: delay,
+                    budget: budget,
+                    preferred_time: "Any"
+                })
             }
         );
 
         const data = await response.json();
 
-        console.log("Backend response:", data);
+        if (type === "Flight Cancellation") {
 
-        // Update flight status
-        document.getElementById("flightStatus").textContent = "Delayed 4 Hours";
+            const alternatives =
+                data.agents.alternative_flights;
 
-        // Update system status
-        document.getElementById("systemStatus").textContent = "Journey Replanned";
+            document.getElementById("dependency").innerHTML = `
+                <div class="result">
+                    🔴 <strong>Flight Cancelled</strong>
+                    <p>${flight} is no longer available.</p>
+                </div>
 
-        // Show replanning status
-        document.getElementById("replanningStatus").innerHTML = `
-            <h3>✅ Replanning Completed</h3>
-            <p>
-                The AI analyzed the disruption and updated
-                the dependent travel events.
-            </p>
-        `;
+                <div class="result">
+                    🔗 <strong>AI Dependency Analysis</strong>
+                    <p>
+                    Hotel, meeting, transport and activities
+                    may be affected.
+                    </p>
+                </div>
+            `;
 
-        // Show updated travel plan
-        document.getElementById("updatedPlan").innerHTML = `
-            <div>
-                <h3>✈️ Flight</h3>
-                <p>${data.agents.replanning_agent.updated_plan.flight.flight_number}</p>
-                <p>Arrival: ${data.agents.replanning_agent.updated_plan.flight.arrival}</p>
-                <p>Status: Delayed</p>
-            </div>
+            document.getElementById("plan").innerHTML = `
 
-            <div>
-                <h3>🏨 Hotel</h3>
-                <p>
-                    Check-in:
-                    ${data.agents.replanning_agent.updated_plan.hotel.new_time}
-                </p>
-                <p>Status: Rescheduled</p>
-            </div>
+                <h3>✈️ Alternative Journeys Found</h3>
 
-            <div>
-                <h3>💼 Business Meeting</h3>
-                <p>
-                    ${data.agents.replanning_agent.updated_plan.meeting.time}
-                </p>
-                <p>Status: Rescheduled</p>
-            </div>
+                ${alternatives.map((flight, index) => `
 
-            <div>
-                <h3>🗼 Eiffel Tower Visit</h3>
-                <p>
-                    ${data.agents.replanning_agent.updated_plan.activity.time}
-                </p>
-                <p>Status: Rescheduled</p>
-            </div>
-        `;
+                    <div class="result">
 
-        // Show traveler notification
-        document.getElementById("notification").innerHTML = `
-            <h3>📢 Traveler Notification</h3>
-            <p>
-                ${data.agents.communication_agent.notification}
-            </p>
-        `;
+                        <h3>
+                            Option ${index + 1} —
+                            ${flight.flight}
+                        </h3>
 
-        alert("AI successfully replanned your journey!");
+                        <p>
+                            Departure: ${flight.departure}
+                        </p>
+
+                        <p>
+                            Arrival: ${flight.arrival}
+                        </p>
+
+                        <p>
+                            Price: ₹${flight.price}
+                        </p>
+
+                        <button
+                            onclick="acceptAlternative('${flight.flight}')">
+                            ✅ Choose This Flight
+                        </button>
+
+                    </div>
+
+                `).join("")}
+
+            `;
+
+            document.getElementById("message").innerHTML = `
+                <div class="result">
+
+                    <h3>🤖 Autonomous AI Recommendation</h3>
+
+                    <p>
+                        I detected the cancellation and searched
+                        for alternative flights within your
+                        ₹${budget.toLocaleString()} budget.
+                    </p>
+
+                    <p class="success">
+                        ✓ ${alternatives.length}
+                        alternative(s) found.
+                    </p>
+
+                </div>
+            `;
+
+        } else {
+
+            document.getElementById("message").innerHTML = `
+                <div class="result">
+                    <h3>🤖 AI Replanning Complete</h3>
+                    <p>
+                        Flight delay detected.
+                        Dependent events have been analyzed.
+                    </p>
+                </div>
+            `;
+        }
 
     } catch (error) {
-        console.error("Error:", error);
 
-        alert("Could not connect to backend.");
+        console.error(error);
+
+        alert(
+            "Backend connection failed. Make sure Uvicorn is running."
+        );
+
     }
+
+    button.innerText = "🤖 Analyze & Replan Journey";
+    button.disabled = false;
+}
+
+
+function acceptAlternative(flight) {
+
+    document.getElementById("message").innerHTML = `
+        <div class="result">
+
+            <h3 class="success">
+                ✅ Alternative Journey Accepted
+            </h3>
+
+            <p>
+                Flight <strong>${flight}</strong>
+                has been selected.
+            </p>
+
+            <p>
+                🤖 AI will now synchronize the hotel,
+                transport, meeting and activities.
+            </p>
+
+        </div>
+    `;
+
+    alert(
+        "✅ Alternative flight " +
+        flight +
+        " accepted!"
+    );
+}
+
+
+function acceptPlan() {
+
+    document.getElementById("message").innerHTML = `
+        <div class="result">
+
+            <h3 class="success">✅ Plan Accepted</h3>
+
+            <p>
+                Your autonomous travel plan has been accepted.
+            </p>
+
+        </div>
+    `;
+
+    alert("Travel plan accepted!");
+}
+
+
+function resetJourney() {
+    location.reload();
 }

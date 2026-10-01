@@ -3,9 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 app = FastAPI(
-    title="AI Travel Disruption Agent",
-    description="Backend for dependency-aware travel replanning",
-    version="1.0.0"
+    title="AI Autonomous Travel Agent",
+    version="2.0"
 )
 
 app.add_middleware(
@@ -17,101 +16,94 @@ app.add_middleware(
 )
 
 
-class FlightDisruption(BaseModel):
+class TravelDisruption(BaseModel):
     flight_number: str
-    delay_hours: int
-    original_arrival: str
-    new_arrival: str
+    disruption_type: str
+    delay_hours: int = 0
+    budget: int = 10000
+    preferred_time: str = "Any"
 
 
 @app.get("/")
 def home():
     return {
-        "message": "AI Travel Disruption Agent is running!",
+        "message": "AI Autonomous Travel Agent is running!",
         "status": "online"
     }
 
 
 @app.post("/simulate-disruption")
-def simulate_disruption(disruption: FlightDisruption):
+def simulate_disruption(data: TravelDisruption):
 
-    updated_plan = {
-        "flight": {
-            "flight_number": disruption.flight_number,
-            "arrival": disruption.new_arrival,
-            "status": "Delayed"
-        },
-        "hotel": {
-            "event": "Hotel Check-in",
-            "new_time": "07:00 PM",
-            "status": "Rescheduled"
-        },
-        "meeting": {
-            "time": "02:00 PM - Next Day",
-            "status": "Rescheduled"
-        },
-        "activity": {
-            "name": "Eiffel Tower Visit",
-            "time": "06:00 PM - Next Day",
-            "status": "Rescheduled"
+    if data.disruption_type == "Flight Cancellation":
+
+        alternatives = [
+            {
+                "flight": "AI-308",
+                "departure": "12:30 PM",
+                "arrival": "06:20 PM",
+                "price": 8500
+            },
+            {
+                "flight": "AI-412",
+                "departure": "03:00 PM",
+                "arrival": "08:10 PM",
+                "price": 7200
+            },
+            {
+                "flight": "AI-522",
+                "departure": "05:30 PM",
+                "arrival": "10:40 PM",
+                "price": 6200
+            }
+        ]
+
+        alternatives = [
+            x for x in alternatives
+            if x["price"] <= data.budget
+        ]
+
+        return {
+            "status": "success",
+            "disruption": "Flight Cancelled",
+
+            "agents": {
+
+                "flight_agent": {
+                    "status": "Flight cancelled",
+                    "original_flight": data.flight_number,
+                    "alternatives_found": len(alternatives)
+                },
+
+                "dependency_agent": {
+                    "affected_events": [
+                        "Hotel Check-in",
+                        "Business Meeting",
+                        "Airport Transport",
+                        "Activities"
+                    ]
+                },
+
+                "alternative_flights": alternatives,
+
+                "replanning_agent": {
+                    "status": "New journey generated",
+                    "hotel_checkin": "07:30 PM",
+                    "meeting": "Tomorrow 10:00 AM",
+                    "transport": "Airport pickup arranged"
+                },
+
+                "communication_agent": {
+                    "notification":
+                        "Your flight was cancelled. "
+                        "AI found alternative journeys and "
+                        "replanned your dependent travel events."
+                }
+            }
         }
-    }
-
-    notification = (
-        f"Your flight {disruption.flight_number} is delayed by "
-        f"{disruption.delay_hours} hours. "
-        "Your hotel check-in, business meeting, and activity "
-        "have been automatically replanned."
-    )
 
     return {
         "status": "success",
-        "message": "Disruption analyzed and itinerary replanned.",
-
-        "agents": {
-
-            "flight_agent": {
-                "agent": "Flight Agent",
-                "flight": disruption.flight_number,
-                "status": "Delayed",
-                "delay_hours": disruption.delay_hours,
-                "new_arrival": disruption.new_arrival
-            },
-
-            "dependency_agent": {
-                "affected_events": [
-                    {
-                        "event": "Hotel Check-in",
-                        "reason": "Traveler arrives after original check-in time"
-                    },
-                    {
-                        "event": "Business Meeting",
-                        "reason": "Travel schedule conflict"
-                    },
-                    {
-                        "event": "Eiffel Tower Visit",
-                        "reason": "Activity overlaps with revised schedule"
-                    }
-                ]
-            },
-
-            "hotel_agent": {
-                "event": "Hotel Check-in",
-                "new_time": "07:00 PM",
-                "status": "Rescheduled"
-            },
-
-            "schedule_agent": {
-                "meeting": "02:00 PM - Next Day",
-                "activity": "06:00 PM - Next Day"
-            },
-
-            "replanning_agent": {
-                "updated_plan": updated_plan
-            },
-
-            "communication_agent": {
-                "notification": notification
-            }
-        }
+        "disruption": "Flight Delayed",
+        "message": "Journey dependencies analyzed and replanned."
     }
